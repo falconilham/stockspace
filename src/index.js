@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route,Switch, BrowserRouter as Router} from 'react-router-dom';
-import GoogleMapReact from 'google-maps-react';
 import './index.css';
 import App from './component/App';
 import * as serviceWorker from './serviceWorker';

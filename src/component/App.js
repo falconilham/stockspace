@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
+import firebase from 'firebase';
 import './App.css';
+import { db } from "./firebase";
 import { Map, GoogleApiWrapper } from 'google-maps-react';
+import Icon from './placeholder-black-shape-for-localization-on-maps.png';
 import {BrowserRouter as outer, Link, NavLink, Redirect, Prompt} from 'react-router-dom';
 import Detail from './detail';
 
-const mapStyles = {
-  width: "48%",
-  height: '48%'
-};
-
-
 
 class App extends Component {
+  
   constructor(){
     super();
     this.state = {
@@ -20,7 +18,23 @@ class App extends Component {
     }
   }
   
+  componentWillMount(){
+    db.collection("place")
+      .get()
+      .then(querySnapshot => {
+        const data = querySnapshot.docs.map(doc => doc.data());
+        this.setState({
+          data: data
+        })
+      });
+  }
+
+  nextPage(){
+    
+  }
+
   render(){
+    console.log(this.state.data)
     return (
       <div className="container-fluid">
         <div className="body">
@@ -28,54 +42,38 @@ class App extends Component {
             <form className="search">
               <input className="form-control" type="text" placeholder="search" />
             </form>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown button
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </div>
           </div>
           <div className="main">
             <div className="left">
-              <Link to={`detail/${"mantap"}`} params={{id : "mantap"}} component={Detail}>
-                <div className="card">
-                  <div className="card-header">
-                    <img src="https://picsum.photos/id/1/5616/3744" />
+              {this.state.data.map((item, i) => {
+                return (
+                  <div className="card" key={i}>
+                    <div className="card-header">
+                      <img src={item.image} />
+                    </div>
+                    <div className="card-body">
+                      <h4>{item.hotel}</h4>
+                      <div>{item.lokasi}</div>
+                    </div>
+                    <div className="card-footer btn-card">
+                      <div className="text-detail">
+                        <img className="Map" src={Icon} />
+                        <div className="kota">{item.kota}</div>
+                      </div>
+                      <Link to={`detail/${item.hotel}`} params={{id : item}} component={Detail}>
+                        <button type="button" className="btn btn-info" id="button">Detail</button>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="card-body">
-                    <h3>Judul</h3>
-                    <text>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only </text>
-                  </div>
-                  <div className="card-footer btn-card">
-                    <text>Jakarta</text>
-                    <button type="button" className="btn btn-info" id="button">Detail</button>
-                  </div>
-                </div>
-              </Link>
-              <Link to={`detail/${"ok"}`} params={{id : "ok"}} component={Detail}>
-                <div className="card">
-                  <div className="card-header">
-                    <img src="https://picsum.photos/id/1/5616/3744" class="img-fluid"/>
-                  </div>
-                  <div className="card-body">
-                    <h3>Judul</h3>
-                    <text>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only </text>
-                  </div>
-                  <div className="card-footer btn-card">
-                    <text>Jakarta</text>
-                    <button type="button" className="btn btn-info" id="button">Detail</button>
-                  </div>
-                </div>
-              </Link>
+                )
+              })}
             </div>
             <div className="right">
-              <div className="map">
-                
-              </div>
+              <Map className="map"
+                google={this.props.google}
+                zoom={8}
+                initialCenter={{ lat: 47.444, lng: -122.176}}
+              />
             </div>
           </div>
         </div>
@@ -84,8 +82,7 @@ class App extends Component {
   }
 }
 
-export default GoogleApiWrapper(
-  (props) => ({
-    apiKey: "AIzaSyC-T96AGprc9PBO0c1SrKirqcvoHs_NyDc"
-  })
-)(App);
+
+export default GoogleApiWrapper({
+  apiKey: 'AIzaSyAhAgN8Rl2x78tcY4cyGUSUzbrmvS10bPU'
+})(App);

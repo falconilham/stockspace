@@ -1,19 +1,17 @@
 import firebase from 'firebase/app';
-import 'firebase/storage';
 
 // Initialize Firebase
-var config = {
-  apiKey: "AIzaSyCZpAQyExCuENk_2RFAVZ2BLwXCiqj7bMQ",
-  authDomain: "react-drawer.firebaseapp.com",
-  databaseURL: "https://react-drawer.firebaseio.com",
-  projectId: "react-drawer",
-  storageBucket: "react-drawer.appspot.com",
-  messagingSenderId: "796755797467"
-};
-firebase.initializeApp(config);
+  // Your web app's Firebase configuration
+  const firebaseConfig = firebase.initializeApp({
+    apiKey: "AIzaSyA4Q7AaUTlmOpGWRRjYPxffP-3YynkT7ZQ",
+    authDomain: "spacestock-977b4.firebaseapp.com",
+    databaseURL: "https://spacestock-977b4.firebaseio.com",
+    projectId: "spacestock-977b4",
+    storageBucket: "spacestock-977b4.appspot.com",
+    messagingSenderId: "220349286043",
+    appId: "1:220349286043:web:0c020b4b00a8ef61"
+  });
 
-const storage = firebase.storage();
+const db = firebaseConfig.firestore();
 
-export {
-    storage, firebase as default
-}
+export { db }
