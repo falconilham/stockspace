@@ -4,7 +4,7 @@ import './App.css';
 import { db } from "./firebase";
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import Icon from './placeholder-black-shape-for-localization-on-maps.png';
-import {BrowserRouter as outer, Link, NavLink, Redirect, Prompt} from 'react-router-dom';
+import {BrowserRouter as outer, Link, Redirect, Prompt} from 'react-router-dom';
 import Detail from './detail';
 
 
@@ -16,21 +16,29 @@ class App extends Component {
       KEY : "AIzaSyC-T96AGprc9PBO0c1SrKirqcvoHs_NyDc",
       data: []
     }
+  this.getData();
   }
   
-  componentWillMount(){
+  getData(){
     db.collection("place")
-      .get()
-      .then(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => doc.data());
-        this.setState({
-          data: data
-        })
-      });
+    .doc('hotels')
+    .get()
+    .then(doc => {
+      const data = doc.data().hotel.map(item => item)
+      console.log(data);
+      this.setState({
+        data: data
+      })
+    });
   }
+  
 
   nextPage(){
     
+  }
+
+  previousPage(){
+
   }
 
   render(){
@@ -49,7 +57,7 @@ class App extends Component {
                 return (
                   <div className="card" key={i}>
                     <div className="card-header">
-                      <img src={item.image} />
+                      <img src={item.image}  alt="Image"/>
                     </div>
                     <div className="card-body">
                       <h4>{item.hotel}</h4>
@@ -57,10 +65,10 @@ class App extends Component {
                     </div>
                     <div className="card-footer btn-card">
                       <div className="text-detail">
-                        <img className="Map" src={Icon} />
+                        <img className="Map" alt="image" src={Icon} />
                         <div className="kota">{item.kota}</div>
                       </div>
-                      <Link to={`detail/${item.hotel}`} params={{id : item}} component={Detail}>
+                      <Link to={`detail/${i}`} params={{id : i}} component={Detail}>
                         <button type="button" className="btn btn-info" id="button">Detail</button>
                       </Link>
                     </div>
